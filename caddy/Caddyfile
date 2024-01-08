@@ -1,0 +1,7 @@
+lieu-hanh-i18n-dev.tmi-hub.net {
+    reverse_proxy backend:8080
+    reverse_proxy frontend:3000
+
+    # Enable automatic SSL with Let's Encrypt
+    tls vuhoang.hanu@gmail.com
+}

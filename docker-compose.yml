@@ -1,0 +1,63 @@
+version: '3'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    environment:
+      MONGO_INITDB_DATABASE: lieu-hanh-i18n
+    ports:
+      - "27018:27018"
+    volumes:
+      - mongodb_data:/data/db
+    command: mongod --port 27018
+    networks:
+      - lieu_hanh_i18n
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    volumes:
+      - ./backend:/home/backend  # Mount the backend source code into the container
+    networks:
+      - lieu_hanh_i18n
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/home/frontend  # Mount the frontend source code into the container
+    command: npm run dev
+    networks:
+      - lieu_hanh_i18n
+
+  # caddy:
+  #   build:
+  #     context: ./caddy
+  #   ports:
+  #     - "8081:80"
+  #     - "8443:443"
+  #   depends_on:
+  #     - backend
+  #     - frontend
+  #   volumes:
+  #     - caddy_data:/data
+  #   networks:
+  #     - lieu_hanh_i18n
+
+
+
+volumes:
+  backend_data:
+  caddy_data:
+  mongodb_data:
+
+networks:
+  lieu_hanh_i18n:
+    driver: bridge
